@@ -1,4 +1,5 @@
 {% extends 'basicTemplate.html' %}
+{% comment %} {% extends 'basicTemplate.html' %}
 {% block title %} Course Register Page {% endblock %}
 
 {% block content %}
@@ -21,4 +22,60 @@
         </select>
         <input type="submit" value="ENROLL"/>
     </form>
+{% endblock %} {% endcomment %}
+
+
+
+
+{% block title %} Course Register Page {% endblock %}
+
+{% block content %}
+    <h1>Student Course Registration</h1>
+
+    <form id="enroll-form" method="POST" action="">
+        {% csrf_token %}
+        Select USN:
+        <select name="student" id="student">
+            {% for s in student_list %}
+            <option value="{{ s.id }}">{{ s.usn }}</option>
+            {% endfor %}
+        </select>
+            
+        Select Course:
+        <select name="course" id="course">
+            {% for c in course_list %}
+            <option value="{{ c.id }}">{{ c.courseCode }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">ENROLL</button>
+    </form>
+
+    <!-- JavaScript for AJAX and alert handling -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#enroll-form').submit(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // AJAX request to handle form submission
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            alert(response.message);
+                            location.reload(); // Reload the page on success
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
